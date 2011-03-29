@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# -*- Python -*-
+# -*- coding: utf-8 -*-
 
 '''BlocksWorld simulator
 
@@ -12,8 +14,11 @@ http://www.opensource.org/licenses/eclipse-1.0.txt
 '''
 #  special thanks to Fumio Kanehiro
 
-import sys
 import os
+import sys
+_openhrp_idl_path = os.path.join(os.path.dirname(__file__), 'idl')
+if _openhrp_idl_path not in sys.path:
+    sys.path.append(_openhrp_idl_path)
 import time
 import traceback
 import math
