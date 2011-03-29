@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<grammar xmlns="http://www.w3.org/2001/06/grammar"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.w3.org/2001/06/grammar
+                             http://www.w3.org/TR/speech-grammar/grammar.xsd"
+         xml:lang="jp"
+         version="1.0" mode="voice" root="command">
+  <rule id="command">
+    <one-of>
+      <item>
+	<item repeat="0-1">少し</item>
+	<one-of>
+	  <item>前</item>
+	  <item>後</item>
+	  <item>左</item>
+	  <item>右</item>
+	</one-of>
+	<item repeat="0-1">へ</item>
+      </item>
+      <item>
+	<one-of>
+	  <item>赤</item>
+	  <item>青</item>
+	  <item>緑</item>
+	</one-of>
+	<item repeat="0-1">の箱</item>
+      </item>
+      <item>取って</item>
+      <item>置いて</item>
+    </one-of>
+  </rule>
+</grammar>
