@@ -1,10 +1,16 @@
 #!/usr/bin/env python
-#
-# Blocks World
-#     written by Yosuke Matsusaka, 2010.
-#
+
+'''BlocksWorld simulator
+
+Copyright (C) 2011
+    Yosuke Matsusaka
+    National Institute of Advanced Industrial Science and Technology (AIST),
+    Japan
+    All rights reserved.
+Licensed under the Eclipse Public License -v 1.0 (EPL)
+http://www.opensource.org/licenses/eclipse-1.0.txt
+'''
 #  special thanks to Fumio Kanehiro
-#
 
 import sys
 import os
@@ -18,17 +24,6 @@ import OpenHRP
 import OpenRTM_aist
 import RTC
 from pprint import pprint
-
-'''BlocksWorld simulator
-
-Copyright (C) 2011
-    Yosuke Matsusaka
-    National Institute of Advanced Industrial Science and Technology (AIST),
-    Japan
-    All rights reserved.
-Licensed under the Eclipse Public License -v 1.0 (EPL)
-http://www.opensource.org/licenses/eclipse-1.0.txt
-'''
 
 class BlocksWorld(threading.Thread):
     def __init__(self, orb):
