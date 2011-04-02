@@ -29,6 +29,16 @@ import os
 import os.path
 import subprocess
 import sys
+from openhriworlds.__init__ import __version__
+_openhrp_idl_path = os.path.join(os.path.dirname(__file__), 'openhriworlds', 'idl')
+if _openhrp_idl_path not in sys.path:
+    sys.path.append(_openhrp_idl_path)
+
+try:
+    import py2exe
+    sys.path.append("openhriworlds")
+except ImportError:
+    pass
 
 
 def gen_idl_name(dir, name):
@@ -101,9 +111,24 @@ class CustomBuild(build.build):
                     ('build_scripts', has_scripts)
                     ]
 
+if sys.platform == "win32":
+    # py2exe options
+    extra = {
+        "console": [
+                    "openhriworlds/BlocksWorld.py",
+                    ],
+        "options": {
+            "py2exe": {
+                "includes": ["OpenRTM_aist", "RTC", "OpenHRP"],
+                "dll_excludes": ["ierutil.dll", "powrprof.dll", "msimg32.dll", "mpr.dll", "urlmon.dll", "dnsapi.dll"],
+            }
+        }
+    }
+else:
+    extra = {}
 
 setup(name='openhriworlds',
-      version='0.0.1',
+      version=__version__,
       description='Virtual playground for OpenRTM (part of OpenHRI softwares).',
       long_description='Virtual playground for OpenRTM (part of OpenHRI softwares).',
       author='Yosuke Matsusaka',
@@ -127,7 +152,8 @@ setup(name='openhriworlds',
       entry_points={
         'console_scripts': ['hrp = openhriworlds.BlocksWorld:main']
         },
-      cmdclass={'build':CustomBuild, 'build_idl': BuildIDL}
+      cmdclass={'build':CustomBuild, 'build_idl': BuildIDL},
+      **extra
       )
 
 

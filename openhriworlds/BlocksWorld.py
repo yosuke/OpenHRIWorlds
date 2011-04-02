@@ -16,9 +16,10 @@ http://www.opensource.org/licenses/eclipse-1.0.txt
 
 import os
 import sys
-_openhrp_idl_path = os.path.join(os.path.dirname(__file__), 'idl')
-if _openhrp_idl_path not in sys.path:
-    sys.path.append(_openhrp_idl_path)
+if not hasattr(sys, "frozen"):
+    _openhrp_idl_path = os.path.join(os.path.dirname(__file__), 'idl')
+    if _openhrp_idl_path not in sys.path:
+        sys.path.append(_openhrp_idl_path)
 import time
 import traceback
 import math
@@ -201,7 +202,7 @@ class BlocksWorld(threading.Thread):
         dgain = [400] * 7 + [20] * 2
         limit = 1500
         
-        self.sim2.calcWorldForwardKinematics()
+        self.planner.calcWorldForwardKinematics()
         now = self.sim.getCharacterAllLinkData("robot", OpenHRP.DynamicsSimulator.JOINT_VALUE)
         tgt = self.planner.getCharacterAllLinkData("robot", OpenHRP.DynamicsSimulator.JOINT_VALUE)
         torque = [0.0] * len(now)
