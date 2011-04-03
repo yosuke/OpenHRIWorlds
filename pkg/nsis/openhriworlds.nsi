@@ -89,6 +89,9 @@ Section $(TEXT_SecBase) SecBase
   File "${TOP_BUILDDIR}\dist\BlocksWorld.exe"
   File "rtc.conf"
 
+  ; Model data
+  File /r "${TOP_BUILDDIR}\openhriworlds\data"
+
   ; Required Libralies
   File /r "${TOP_BUILDDIR}\dist\*.pyd"
   File /r "${TOP_BUILDDIR}\dist\*.dll"
@@ -100,9 +103,6 @@ Section $(TEXT_SecBase) SecBase
   File "/oname=License.txt" "${TOP_SRCDIR}\COPYING"
 
   !insertmacro UNINSTALL.LOG_CLOSE_INSTALL
-
-  ; tcl files
-  File /r "${TOP_BUILDDIR}\dist\tcl"
 
   ;Store installation folder
   WriteRegStr HKLM "Software\${PACKAGE_NAME}" "" $INSTDIR

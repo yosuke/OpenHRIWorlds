@@ -24,6 +24,7 @@ import time
 import traceback
 import math
 import threading
+import glob
 from omniORB import CORBA
 import CosNaming
 import OpenHRP
@@ -40,13 +41,20 @@ class BlocksWorld(threading.Thread):
             self._basedir = os.path.dirname(__file__)
         self._basedir = os.path.abspath(self._basedir)
         self._basedir = self._basedir.replace('\\', '/')
+        if sys.platform == 'win32':
+            bindir = glob.glob('/Program Files*/OpenHRPSDK')[0]
+            self._datadir = os.path.join(bindir, 'share', 'OpenHRP-3.1', 'sample')
+        else:
+            self._datadir = '' # TODO: unix path detector
+        self._datadir = os.path.abspath(self._datadir)
+        self._datadir = self._datadir.replace('\\', '/')
 
         # define constants
-        self.ROBOT_URL = "file://"+self._basedir+"/PA10/pa10.main.wrl"
-        self.FLOOR_URL = "file://"+self._basedir+"/floor.wrl"
-        self.BOX1_URL = "file://"+self._basedir+"/box.wrl"
-        self.BOX2_URL = "file://"+self._basedir+"/box2.wrl"
-        self.BOX3_URL = "file://"+self._basedir+"/box3.wrl"
+        self.ROBOT_URL = "file://"+self._datadir+"/model/PA10/pa10.main.wrl"
+        self.FLOOR_URL = "file://"+self._datadir+"/model/floor.wrl"
+        self.BOX1_URL = "file://"+self._basedir+"/data/box.wrl"
+        self.BOX2_URL = "file://"+self._basedir+"/data/box2.wrl"
+        self.BOX3_URL = "file://"+self._basedir+"/data/box3.wrl"
 
         self.time = 0.0
         self.dt = 0.01
@@ -66,11 +74,16 @@ class BlocksWorld(threading.Thread):
         self.viewer = viewerobj._narrow(OpenHRP.OnlineViewer)
         
         # load models from the file
-        self.robot = self.modelloader.loadBodyInfo(self.ROBOT_URL)
-        self.floor = self.modelloader.loadBodyInfo(self.FLOOR_URL)
-        self.box1 = self.modelloader.loadBodyInfo(self.BOX1_URL)
-        self.box2 = self.modelloader.loadBodyInfo(self.BOX2_URL)
-        self.box3 = self.modelloader.loadBodyInfo(self.BOX3_URL)
+        print self.ROBOT_URL
+        self.robot = self.modelloader.loadBodyInfo(str(self.ROBOT_URL))
+        print self.FLOOR_URL
+        self.floor = self.modelloader.loadBodyInfo(str(self.FLOOR_URL))
+        print self.BOX1_URL
+        self.box1 = self.modelloader.loadBodyInfo(str(self.BOX1_URL))
+        print self.BOX2_URL
+        self.box2 = self.modelloader.loadBodyInfo(str(self.BOX2_URL))
+        print self.BOX3_URL
+        self.box3 = self.modelloader.loadBodyInfo(str(self.BOX3_URL))
 
         # initialize real world dynamics simulator
         self.sim = self.simfactory.create()
@@ -123,11 +136,11 @@ class BlocksWorld(threading.Thread):
         self.planner.initSimulation()
 
         # init online viewer
-        self.viewer.load("robot", self.ROBOT_URL)
-        self.viewer.load("floor", self.FLOOR_URL)
-        self.viewer.load("box1", self.BOX1_URL)
-        self.viewer.load("box2", self.BOX2_URL)
-        self.viewer.load("box3", self.BOX3_URL)
+        self.viewer.load("robot", str(self.ROBOT_URL))
+        self.viewer.load("floor", str(self.FLOOR_URL))
+        self.viewer.load("box1", str(self.BOX1_URL))
+        self.viewer.load("box2", str(self.BOX2_URL))
+        self.viewer.load("box3", str(self.BOX3_URL))
         self.viewer.clearLog()
 
         self.prevtime = time.clock()
@@ -319,6 +332,9 @@ class BlocksWorldRTC(OpenRTM_aist.DataFlowComponentBase):
     def onInitialize(self):
         try:
             OpenRTM_aist.DataFlowComponentBase.onInitialize(self)
+            self._logger = OpenRTM_aist.Manager.instance().getLogbuf(self._properties.getProperty("instance_name"))
+            self._logger.RTC_INFO(self._properties.getProperty("type_name") + " version " + self._properties.getProperty("version"))
+            self._logger.RTC_INFO("Copyright (C) 2010-2011 Yosuke Matsusaka")
             self._j = BlocksWorld(OpenRTM_aist.Manager.instance().getORB())
             self._j.start()
             # create inport
@@ -333,6 +349,7 @@ class BlocksWorldRTC(OpenRTM_aist.DataFlowComponentBase):
 
     def onData(self, name, data):
         try:
+            self._logger.RTC_INFO("COMMAND: " + data.data)
             self._j.textCommand(data.data)
         except:
             print traceback.format_exc()

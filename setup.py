@@ -150,7 +150,7 @@ setup(name='openhriworlds',
                 'openhriworlds.idl.OpenHRP',
                 'openhriworlds.idl.OpenHRP__POA'],
       entry_points={
-        'console_scripts': ['hrp = openhriworlds.BlocksWorld:main']
+        'console_scripts': ['blocksworld = openhriworlds.BlocksWorld:main']
         },
       cmdclass={'build':CustomBuild, 'build_idl': BuildIDL},
       **extra
