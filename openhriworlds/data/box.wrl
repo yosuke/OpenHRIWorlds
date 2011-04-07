@@ -289,8 +289,8 @@ DEF box Humanoid {
       rotation 0 0 1 0
       children [
         DEF BODY Segment {
-         mass 1
-	  momentsOfInertia [1 0 0 0 1 0 0 0 1]
+          mass 0.5
+    	  momentsOfInertia [0.001 0 0 0 0.001 0 0 0 0.001]
           children [
             Shape {
               geometry Box {

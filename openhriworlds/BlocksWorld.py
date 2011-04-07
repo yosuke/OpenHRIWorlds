@@ -57,7 +57,7 @@ class BlocksWorld(threading.Thread):
         self.BOX3_URL = "file://"+self._basedir+"/data/box3.wrl"
 
         self.time = 0.0
-        self.dt = 0.01
+        self.dt = 0.005
         self.prevjoint = None
         
         self.commands = []
